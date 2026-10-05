@@ -40,11 +40,15 @@ La interfaz de usuario sigue estrictamente las directrices de **Material 3** e i
 
 ## 3. Base de Datos Empleada
 
-Se utiliza **Room Database** para la persistencia local de datos en el dispositivo.
+Se utiliza **Room Database** (`AppDatabase`) para la persistencia local de datos en el dispositivo.
 
-### Esquema de la Base de Datos (`AppDatabase`):
-- **`UserEntity`**: Almacena el id, nombre de usuario, correo electrónico y contraseña hash del usuario registrado.
-- **`FavoriteCityEntity`**: Registra las ciudades guardadas como favoritas por el usuario con su temperatura, país y estado climático.
+### Tablas y Entidades:
+- **`UserEntity`**: Almacena el `id`, `username`, `email`, `passwordHash` y la unidad de temperatura preferida (`preferredTempUnit`) del usuario registrado.
+- **`FavoriteCityEntity`**: Registra las ciudades guardadas como favoritas por el usuario con su nombre (`cityName`), país (`country`), temperatura (`temperatureC`), descripción del clima (`condition`) e icono (`iconRes`).
+
+### Interfaces DAO:
+- **`UserDao`**: Permite la inserción, consulta por email/password y actualización del usuario.
+- **`FavoriteCityDao`**: Permite guardar ciudades en favoritos, eliminarlas y consultar si una ciudad es favorita mediante flujos reactivos (`Flow`).
 
 ---
 
@@ -57,7 +61,7 @@ Se utiliza **Room Database** para la persistencia local de datos en el dispositi
 ## 5. Desarrollo de la Aplicación
 
 La aplicación implementa la arquitectura recomendada por Google (**MVVM + Repositorios**):
-- **Capa de Datos**: Repositorios (`WeatherRepository`, `AuthRepository`) y base de datos Room.
+- **Capa de Datos**: Repositorios (`WeatherRepository`, `AuthRepository`) y base de datos Room (`AppDatabase`).
 - **Capa de Dominio / Presentación**: `ViewModels` que exponen `StateFlow` para gestionar `UiState` de forma reactiva.
 - **Capa de Vista**: Composables modulares y reactivos adaptables a diferentes tamaños de pantalla.
 
