@@ -28,13 +28,13 @@ Esta aplicación ha sido desarrollada como práctica universitaria para la asign
 
 La interfaz de usuario sigue estrictamente las directrices de **Material 3** e implementa **Jetpack Compose** para la declaración reactiva de UI. 
 
-### Pantallas Principales (6 Destinos):
-- **Pantalla de Login (`LoginScreen`)**: Formulario de acceso con validación de credenciales.
-- **Pantalla de Registro (`RegisterScreen`)**: Creación de nueva cuenta si no se está autenticado.
-- **Pantalla de Inicio (`HomeScreen`)**: Muestra el clima actual, pronóstico por horas en `LazyRow` y ciudades destacadas en `LazyColumn`.
-- **Pantalla de Detalle (`DetailScreen`)**: Análisis detallado del clima pasando la ciudad como argumento mediante `Navigation Compose`.
-- **Pantalla de Perfil/Ajustes (`ProfileScreen`)**: Gestión del usuario, cambio de unidades (°C / °F) y ajuste de tema.
-- **Pantalla de Funcionalidades Avanzadas (`AdvancedScreen`)**: Mapa interactivo de estaciones meteorológicas, gráficos visuales de precipitación/temperatura y gestión de permisos de ubicación.
+### Pantallas Principales (6 Destinos en Navigation Compose):
+1. **`Screen.Login` (`"login"`)**: Formulario de acceso con validación de credenciales.
+2. **`Screen.Register` (`"register"`)**: Creación de nueva cuenta si no se está autenticado.
+3. **`Screen.Home` (`"home"`)**: Muestra el clima actual, pronóstico por horas en `LazyRow` y ciudades destacadas en `LazyColumn`.
+4. **`Screen.Detail` (`"detail/{cityName}"`)**: Análisis detallado del clima pasando la ciudad como argumento mediante `Navigation Compose` (**paso de parámetros**).
+5. **`Screen.Profile` (`"profile"`)**: Gestión del usuario, cambio de unidades (°C / °F) y ajuste de tema.
+6. **`Screen.Advanced` (`"advanced"`)**: Mapa interactivo de estaciones meteorológicas, gráficos visuales de precipitación/temperatura y gestión de permisos de ubicación.
 
 ---
 
@@ -61,24 +61,24 @@ Se utiliza **Room Database** (`AppDatabase`) para la persistencia local de datos
 ## 5. Desarrollo de la Aplicación
 
 La aplicación implementa la arquitectura recomendada por Google (**MVVM + Repositorios**):
+- **Sistema de Navegación (`ui/navigation`)**:
+  - `Screen.kt`: Rutas selladas (`sealed class Screen`) y destinos del `BottomNavigationBar`.
+  - `BottomNavigationBar.kt`: Barra de navegación inferior dinámica de Material 3.
+  - `AppNavigation.kt`: Grafo de navegación `NavHost` conectando las 6 pantallas y gestionando el paso de parámetros (`cityName`).
 - **Modelos de Datos (`data/model`)**:
   - `CityWeather`, `HourlyForecast`, `DailyForecast` y el enum `WeatherCondition`.
 - **Patrón Repository (`data/repository`)**:
   - **`WeatherRepository`**: Proveedor de datos meteorológicos, información por horas, días y sincronización con las ciudades favoritas de Room.
   - **`AuthRepository`**: Lógica de registro, autenticación y persistencia de sesión con Room.
 - **Capa de Dominio / ViewModels (`ui/*`)**:
-  - **`AuthViewModel`**: Manejo de autenticación, login, registro y estado de credenciales (`AuthUiState`).
-  - **`HomeViewModel`**: Búsqueda dinámica de ciudades y lista de ciudades destacadas (`HomeUiState`).
-  - **`DetailViewModel`**: Carga del clima en detalle por ciudad seleccionada y toggle °C/°F (`DetailUiState`).
-  - **`ProfileViewModel`**: Gestión del perfil, modo oscuro, notificaciones y ciudades favoritas (`ProfileUiState`).
-  - **`AdvancedViewModel`**: Estaciones meteorológicas, historial térmico y estado de permisos de localización (`AdvancedUiState`).
+  - **`AuthViewModel`**, **`HomeViewModel`**, **`DetailViewModel`**, **`ProfileViewModel`** y **`AdvancedViewModel`**.
 - **Capa de Vista**: Composables modulares y reactivos adaptables a diferentes tamaños de pantalla.
 
 ---
 
 ## 6. Problemas Encontrados y Soluciones
 
-1. **Gestión del Estado de Navegación**: Se solucionó mediante el uso de `Navigation Compose` pasando argumentos codificados en las rutas.
+1. **Gestión del Estado de Navegación**: Se solucionó mediante el uso de `Navigation Compose` pasando argumentos codificados en las rutas (`detail/{cityName}`).
 2. **Persistencia asíncrona**: Uso de Kotlin Coroutines y `Flow` para evitar bloqueos en el hilo principal de la UI.
 3. **Solicitud de Permisos**: Implementación de `rememberPermissionState` para gestionar permisos de localización en tiempo de ejecución.
 
@@ -88,7 +88,7 @@ La aplicación implementa la arquitectura recomendada por Google (**MVVM + Repos
 
 ### Puntos Fuertes:
 - Interfaz moderna y atractiva construida 100% en Jetpack Compose con Material 3.
-- Arquitectura limpia y escalable (MVVM + Repositorios + Room).
+- Arquitectura limpia y escalable (MVVM + Repositorios + Room + Navigation Compose).
 - Código totalmente documentado y dividido en commits incrementales.
 
 ### Puntos Débiles:
@@ -104,11 +104,11 @@ El desarrollo de esta práctica ha permitido afianzar los conceptos fundamentale
 
 ## 9. Uso de la Inteligencia Artificial
 
-Para la realización de esta práctica se ha utilizado un asistente de Inteligencia Artificial como herramienta de apoyo, conforme a lo permitido en las bases de la asignatura.
+Para la realización de esta práctica se ha utilizado un asistente de Inteligencia Artificial como herramienta de apoyo, conforme a lo permitted en las bases de la asignatura.
 
 ### Usos de la IA en el proyecto:
 - **Planificación e Ingeniería de Requisitos**: Estructuración del plan de desarrollo paso a paso por commits.
-- **Diseño Arquitectónico**: Asesoramiento en la organización de paquetes (MVVM, Repositorio, Room).
+- **Diseño Arquitectónico**: Asesoramiento en la organización de paquetes (MVVM, Repositorio, Room, Navigation).
 - **Generación de Plantillas y Código**: Ayuda en la sintaxis de Jetpack Compose, configuración de dependencias de Gradle y Room DAO.
 - **Documentación y Calidad**: Redacción técnica del `README.md` y revisión de buenas prácticas.
 
