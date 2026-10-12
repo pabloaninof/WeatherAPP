@@ -26,7 +26,7 @@ Esta aplicación ha sido desarrollada como práctica universitaria para la asign
 
 ## 2. Diseño de la Aplicación
 
-La interfaz de usuario sigue strictly las directrices de **Material 3** e implementa **Jetpack Compose** para la declaración reactiva de UI. 
+La interfaz de usuario sigue estrictamente las directrices de **Material 3** e implementa **Jetpack Compose** para la declaración reactiva de UI. 
 
 ### Pantallas Principales (6 Destinos):
 - **Pantalla de Login (`LoginScreen`)**: Formulario de acceso con validación de credenciales.
@@ -66,7 +66,12 @@ La aplicación implementa la arquitectura recomendada por Google (**MVVM + Repos
 - **Patrón Repository (`data/repository`)**:
   - **`WeatherRepository`**: Proveedor de datos meteorológicos, información por horas, días y sincronización con las ciudades favoritas de Room.
   - **`AuthRepository`**: Lógica de registro, autenticación y persistencia de sesión con Room.
-- **Capa de Dominio / Presentación**: `ViewModels` que exponen `StateFlow` para gestionar `UiState` de forma reactiva.
+- **Capa de Dominio / ViewModels (`ui/*`)**:
+  - **`AuthViewModel`**: Manejo de autenticación, login, registro y estado de credenciales (`AuthUiState`).
+  - **`HomeViewModel`**: Búsqueda dinámica de ciudades y lista de ciudades destacadas (`HomeUiState`).
+  - **`DetailViewModel`**: Carga del clima en detalle por ciudad seleccionada y toggle °C/°F (`DetailUiState`).
+  - **`ProfileViewModel`**: Gestión del perfil, modo oscuro, notificaciones y ciudades favoritas (`ProfileUiState`).
+  - **`AdvancedViewModel`**: Estaciones meteorológicas, historial térmico y estado de permisos de localización (`AdvancedUiState`).
 - **Capa de Vista**: Composables modulares y reactivos adaptables a diferentes tamaños de pantalla.
 
 ---
