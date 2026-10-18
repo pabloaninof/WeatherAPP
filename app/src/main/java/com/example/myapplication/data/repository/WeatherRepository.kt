@@ -7,6 +7,7 @@ import com.example.myapplication.data.model.DailyForecast
 import com.example.myapplication.data.model.HourlyForecast
 import com.example.myapplication.data.model.WeatherCondition
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 
@@ -207,19 +208,21 @@ class WeatherRepositoryImpl(
 
     override suspend fun toggleFavoriteCity(cityName: String) {
         val city = mockCities.find { it.cityName.equals(cityName, ignoreCase = true) } ?: return
-        val existingFavs = favoriteCityDao.getAllFavoriteCities()
-        // Delete or insert
-        favoriteCityDao.deleteFavoriteCityByName(city.cityName)
-        // If it wasn't favorite, insert it
-        favoriteCityDao.insertFavoriteCity(
-            FavoriteCityEntity(
-                cityName = city.cityName,
-                country = city.country,
-                temperatureC = city.currentTempC,
-                condition = city.condition.description,
-                iconRes = city.condition.iconName,
-                isFavorite = true
+        val favs = favoriteCityDao.getAllFavoriteCities().first()
+        val isFav = favs.any { it.cityName.equals(cityName, ignoreCase = true) }
+        if (isFav) {
+            favoriteCityDao.deleteFavoriteCityByName(city.cityName)
+        } else {
+            favoriteCityDao.insertFavoriteCity(
+                FavoriteCityEntity(
+                    cityName = city.cityName,
+                    country = city.country,
+                    temperatureC = city.currentTempC,
+                    condition = city.condition.description,
+                    iconRes = city.condition.iconName,
+                    isFavorite = true
+                )
             )
-        )
+        }
     }
 }
