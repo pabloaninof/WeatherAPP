@@ -3,6 +3,7 @@ package com.example.myapplication.ui.navigation
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -13,7 +14,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.myapplication.data.repository.AuthRepository
 import com.example.myapplication.data.repository.WeatherRepository
+import com.example.myapplication.ui.advanced.AdvancedScreen
+import com.example.myapplication.ui.advanced.AdvancedViewModel
 import com.example.myapplication.ui.auth.AuthViewModel
 import com.example.myapplication.ui.auth.LoginContent
 import com.example.myapplication.ui.auth.RegisterContent
@@ -21,11 +25,14 @@ import com.example.myapplication.ui.detail.DetailScreen
 import com.example.myapplication.ui.detail.DetailViewModel
 import com.example.myapplication.ui.home.HomeScreen
 import com.example.myapplication.ui.home.HomeViewModel
+import com.example.myapplication.ui.profile.ProfileScreen
+import com.example.myapplication.ui.profile.ProfileViewModel
 
 @Composable
 fun AppNavigation(
     navController: NavHostController = rememberNavController(),
     authViewModel: AuthViewModel,
+    authRepository: AuthRepository,
     weatherRepository: WeatherRepository
 ) {
     val authUiState by authViewModel.uiState.collectAsState()
@@ -106,12 +113,26 @@ fun AppNavigation(
 
             // 5. Destination: Profile
             composable(Screen.Profile.route) {
-                // Profile placeholder until Commit 8
+                val profileViewModel = remember { ProfileViewModel(authRepository, weatherRepository) }
+                LaunchedEffect(authUiState.loggedInUserId) {
+                    val userId = authUiState.loggedInUserId ?: 1
+                    profileViewModel.loadUser(userId)
+                }
+                ProfileScreen(
+                    viewModel = profileViewModel,
+                    onLogoutClick = {
+                        authViewModel.logout()
+                        navController.navigate(Screen.Login.route) {
+                            popUpTo(0) { inclusive = true }
+                        }
+                    }
+                )
             }
 
             // 6. Destination: Advanced
             composable(Screen.Advanced.route) {
-                // Advanced placeholder until Commit 8
+                val advancedViewModel = remember { AdvancedViewModel() }
+                AdvancedScreen(viewModel = advancedViewModel)
             }
         }
     }

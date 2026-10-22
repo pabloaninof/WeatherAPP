@@ -33,6 +33,7 @@ class MainActivity : ComponentActivity() {
                 ) {
                     AppNavigation(
                         authViewModel = authViewModel,
+                        authRepository = authRepository,
                         weatherRepository = weatherRepository
                     )
                 }
